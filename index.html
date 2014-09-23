@@ -1,0 +1,23 @@
+<html>
+<head> 
+  <meta charset="utf-8">
+  <title>GaussMethod</title>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="app.js"></script>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+  <h1>Вирішення системи лінійних алгебраїчних рівнянь методом Гаусса</h1>
+  <select id='size' onchange="generateInput(this.value)">
+    <option value=2>2</option>
+    <option value=3 selected='true'>3</option>
+    <option value=4>4</option>
+    <option value=5>5</option>
+  </select>
+  <div id='form'> </div>
+  <button id='ok' onclick="main()">Ok!</button>
+  <div id='result'> </div>
+</body>
+
+</html>
