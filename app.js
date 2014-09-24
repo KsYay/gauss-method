@@ -55,7 +55,7 @@ var init = function(){
 
 var directStep = function(){
   div.append("<h2> Прямий хід </h2>");
-  div.append("<span> Робимо перетворення: </span> <br>");
+  div.append("<span> Робимо перетворення: </span> <br> <br>");
   var eps = Number.MIN_VALUE;
 
   for(var i=0; i<size-1; i++){
@@ -74,25 +74,27 @@ var directStep = function(){
       }
       b[j]-=scaleFactor*b[i];
     }
-    output();
+    output(i);
   }
 }
 
-var output = function(){
-  var table = '<table border="1">'
-      for(var i=0; i<size; i++){
-        table += "<tr>";
-            for(var j=0; j<size; j++){
-              table += "<td>" + matr[i][j] + "</td>";
-            }
-        table += "<td>" + b[i] + "</td>" + "</tr>";
-      }
-      table += "</table>";
-      div.append(table);
+var output = function(iter){
+  var table = "<span> Ітерація №" + (iter+1) + "</span> <br>";
+  table += "<table border='1'>";
+    for(var i=0; i<size; i++){
+      table += "<tr>";
+        for(var j=0; j<size; j++){
+          table += "<td>" + matr[i][j] + "</td>";
+        }
+      table += "<td>" + b[i] + "</td>" + "</tr>";
     }
+  table += "</table> <br>";
+  div.append(table);
+}
 
 var backwardStep = function(){
   div.append("<h2> Обратний хід </h2>");
+  div.append("<span> Розв'язок: </span> <br>");
   x = [size];
   for(var i = size-1; i >= 0; i--){
     // dotProd() looking for the sum of coefficients of known x-s
@@ -156,12 +158,27 @@ var gauss = function(){
   //write();
   if(flag)
     backwardStep();
-  write();
+  //write();
 }
   
+var errors = function (A, c){
+  div.append("<span> Вектор нев'язок: </span> <br>");
+  var er = 0;
+  for(var i=0; i<size; i++){
+    for(var j=0; j<size; j++){
+      er += A[i][j]*x[j];      
+    }
+    er -= c[i];
+    div.append("<span>" + er + "</span> <br>");
+  }
+}
+
 var main = function(){
   // initialization of variables
   init();
+  var A = matr;
+  var c = b;
   div.html('');
   gauss();
+  errors (A, c);
 }
