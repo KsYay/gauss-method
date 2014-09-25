@@ -2,10 +2,10 @@
 <head> 
   <meta charset="utf-8">
   <title>GaussMethod</title>
-<!--   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/1.0.1/math.min.js"></script> -->
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="libs/jquery.js"></script>
+  <script src="libs/verify.min.js"></script>
   <script src="app.js"></script>
-  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="main.css">
 </head>
 
 <body>
@@ -15,10 +15,15 @@
     <option value=3 selected='true'>3</option>
     <option value=4>4</option>
     <option value=5>5</option>
+    <option value=6>6</option>
   </select>
-  <div id='form'> </div>
+  <form id='form'> </form>
   <button id='ok' onclick="main()">Ok!</button>
   <div id='result'> </div>
+  <div class='backwardStep'>
+    <div class='solution'></div>
+    <div class='errors'></div>
+  </div>
 </body>
 
 </html>

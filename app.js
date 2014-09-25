@@ -1,5 +1,15 @@
 $(document).ready(function(){
   div = $('#result');
+  $.verify.addRules({
+    goodDecimal: function(input) {
+      var matcher = /^(\+|\-)?[0-9]+(\.[0-9]+)?$/
+      if(matcher.test(input.val())) {
+        return true
+      } else {
+        return 'input error';
+      }
+    }
+  })
   firstGenerateInput(3);
 });
 
@@ -19,9 +29,9 @@ var firstGenerateInput = function(number) {
   var a=[[3,2,-5,-1], [2,-1,3,13], [1,2,-1,9]];
   for(var i = 0; i < number; i++) {
     for(var j = 0; j < number; j++) {
-      input_div.append("<input type='number' id='" + i + "_" + j + "' value='" + a[i][j] + "'>");
+      input_div.append("<input data-validate='goodDecimal,required' type='number' id='" + i + "_" + j + "' value='" + a[i][j] + "'>");
     }
-    input_div.append("<input type='number' id='b" + i +"' value='" + a[i][j] + "'>");
+    input_div.append("<input data-validate='goodDecimal,required' type='number' id='b" + i +"' value='" + a[i][j] + "'>");
     input_div.append('<br>');
   }
 }
@@ -33,9 +43,9 @@ var generateInput = function(number) {
 
   for(var i = 0; i < number; i++) {
     for(var j = 0; j < number; j++) {
-      input_div.append("<input type='number' id='" + i + "_" + j + "'>");
+      input_div.append("<input data-validate='goodDecimal,required' type='number' id='" + i + "_" + j + "'>");
     }
-    input_div.append("<input type='number' id='b" + i +"'>");
+    input_div.append("<input data-validate='goodDecimal,required' type='number' id='b" + i +"'>");
     input_div.append('<br>');
   }
 }
@@ -79,7 +89,7 @@ var directStep = function(){
 }
 
 var output = function(iter){
-  var table = "<span> Ітерація №" + (iter+1) + "</span> <br>";
+  var table = "<span> №" + (iter+1) + "</span> <br>";
   table += "<table border='1'>";
     for(var i=0; i<size; i++){
       table += "<tr>";
@@ -93,15 +103,24 @@ var output = function(iter){
 }
 
 var backwardStep = function(){
-  div.append("<h2> Обратний хід </h2>");
-  div.append("<span> Розв'язок: </span> <br>");
+  var solutionsDiv = $('.solution');
+  solutionsDiv.html('');
   x = [size];
   for(var i = size-1; i >= 0; i--){
-    // dotProd() looking for the sum of coefficients of known x-s
+    // dotProd() looking for the sum of coefficients of known x
     x[i] = (b[i] - dotProd(matr[i], i + 1, size - 1)) / matr[i][i];
   }
   for(var i=0; i<size; i++){
-    div.append("<span>" + x[i] + "</span> <br>");
+    if(isNaN(x[i]) || x[i] == Number.POSITIVE_INFINITY || x[i] == Number.NEGATIVE_INFINITY){
+      flag = false;
+      div.append("<span> Нема розв'язку! </span> <br>");
+      return;
+    }
+  }
+  div.append("<h2> Обратний хід </h2>");
+  solutionsDiv.append("<span> Розв'язок: </span> <br>");
+  for(var i=0; i<size; i++){
+    solutionsDiv.append("<span>" + x[i] + "</span> <br>");
   }
 }
 
@@ -162,23 +181,39 @@ var gauss = function(){
 }
   
 var errors = function (A, c){
-  div.append("<span> Вектор нев'язок: </span> <br>");
+  var errorsDiv = $('.errors');
+  errorsDiv.html('');
+
+  errorsDiv.append("<span> Вектор нев'язок: </span> <br>");
   var er = 0;
   for(var i=0; i<size; i++){
     for(var j=0; j<size; j++){
       er += A[i][j]*x[j];      
     }
     er -= c[i];
-    div.append("<span>" + er + "</span> <br>");
+    errorsDiv.append("<span>" + er + "</span> <br>");
   }
 }
 
 var main = function(){
-  // initialization of variables
-  init();
-  var A = matr;
-  var c = b;
-  div.html('');
-  gauss();
-  errors (A, c);
+  $("#form").verify({
+    prompt: function(element, text, opts) {
+      $(element).css('border', '1px solid #888');
+      if(text!=null) {
+        $(element).css('border', '2px solid red');
+      }
+    }
+  });
+
+  $('#form').validate(function(success){
+    if(success) {
+      init(); // initialization of variables
+      var A = matr;
+      var c = b;
+      div.html('');
+      gauss();
+      if(flag)
+        errors (A, c);
+    }
+  });   
 }
