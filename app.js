@@ -10,7 +10,7 @@ $(document).ready(function(){
       }
     }
   })
-  firstGenerateInput(3);
+  firstGenerateInput(4);
 });
 
 var div; // for intermediate values and answer
@@ -18,7 +18,7 @@ var size; //the dimension of the square matrix
 var matr;
 var b; // free factors
 var x; // result
-var flag = true; // non-zero determinant
+var flag = true; // solution exists
 
 // with default values
 var firstGenerateInput = function(number) {
@@ -26,7 +26,7 @@ var firstGenerateInput = function(number) {
   var input_div = $('#form');
   input_div.html('');
 
-  var a=[[3,2,-5,-1], [2,-1,3,13], [1,2,-1,9]];
+  var a=[[0,1,3,2,-1], [1000,3,1,-5,-2], [-3,4,1,4,-1], [4,0,-2,-3,4]];
   for(var i = 0; i < number; i++) {
     for(var j = 0; j < number; j++) {
       input_div.append("<input data-validate='goodDecimal,required' type='number' id='" + i + "_" + j + "' value='" + a[i][j] + "'>");
@@ -118,7 +118,7 @@ var backwardStep = function(){
     }
   }
   div.append("<h2> Обратний хід </h2>");
-  solutionsDiv.append("<span> Розв'язок: </span> <br>");
+  solutionsDiv.append("<span> Розв'язок: </span> <br> <br>");
   for(var i=0; i<size; i++){
     solutionsDiv.append("<span>" + x[i] + "</span> <br>");
   }
@@ -184,7 +184,7 @@ var errors = function (A, c){
   var errorsDiv = $('.errors');
   errorsDiv.html('');
 
-  errorsDiv.append("<span> Вектор нев'язок: </span> <br>");
+  errorsDiv.append("<span> Вектор нев'язок: </span> <br> <br>");
   var er = 0;
   for(var i=0; i<size; i++){
     for(var j=0; j<size; j++){
@@ -193,6 +193,7 @@ var errors = function (A, c){
     er -= c[i];
     errorsDiv.append("<span>" + er + "</span> <br>");
   }
+  errorsDiv.append("<br> <br>");
 }
 
 var main = function(){
