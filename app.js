@@ -10,23 +10,27 @@ $(document).ready(function(){
       }
     }
   })
-  firstGenerateInput(4);
+  var a = [];
+  firstGenerateInput(4, a);
 });
 
-var div; // for intermediate values and answer
 var size; //the dimension of the square matrix
 var matr;
 var b; // free factors
+var div; // for intermediate values and answer
 var x; // result
 var flag = true; // solution exists
 
 // with default values
-var firstGenerateInput = function(number) {
+var firstGenerateInput = function(number, a) {
   size = number;
   var input_div = $('#form');
   input_div.html('');
 
-  var a=[[0,1,3,2,-1], [1000,3,1,-5,-2], [-3,4,1,4,-1], [4,0,-2,-3,4]];
+  if(a.length == 0) {
+    var a=[[0,1,3,2,-1], [1000,3,1,-5,-2], [-3,4,1,4,-1], [4,0,-2,-3,4]];
+  }
+
   for(var i = 0; i < number; i++) {
     for(var j = 0; j < number; j++) {
       input_div.append("<input data-validate='goodDecimal,required' type='number' id='" + i + "_" + j + "' value='" + a[i][j] + "'>");
@@ -84,7 +88,7 @@ var directStep = function(){
       }
       b[j]-=scaleFactor*b[i];
     }
-    output(i);
+    output(i); 
   }
 }
 
@@ -162,22 +166,10 @@ var dotProd = function(row, index1, index2){
   return sum;
 }
 
-var write = function(){
-  for(var i=0; i<size; i++){
-    for(var j=0; j<size; j++){
-      console.log(matr[i][j] + " ");
-    }
-    console.log(b[i]);
-  }
-}
-
 var gauss = function(){
-  // write();
   directStep();
-  //write();
   if(flag)
     backwardStep();
-  //write();
 }
   
 var errors = function (A, c){
@@ -212,6 +204,9 @@ var main = function(){
       var A = matr;
       var c = b;
       div.html('');
+      $('.solution').html('');
+      $('.errors').html('');
+      flag = true;
       gauss();
       if(flag)
         errors (A, c);
